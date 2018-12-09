@@ -4,35 +4,34 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText count;
-    private final String emptyInputMessage = "Please enter your NTD amount.";
-
+    private EditText count = null;
     private float rateOfUS;
-    private float rateOfJP;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         count = findViewById(R.id.ntd);
-        rateOfUS = Float.parseFloat(((TextView)findViewById(R.id.rate_us)).getText().toString());
-
+        TypedValue typedValue = new TypedValue();
+        getResources().getValue(R.dimen.rate_us, typedValue, true);
+        rateOfUS = typedValue.getFloat();
+        Log.d("checkme", String.valueOf(rateOfUS));
     }
 
     public void findRate(View view) {
         if(count.getText().toString().isEmpty())
         {
             new AlertDialog.Builder(this)
-                            .setTitle("Problem")
-                            .setMessage(emptyInputMessage)
-                            .setPositiveButton("OK", null)
+                            .setTitle(R.string.problem)
+                            .setMessage(R.string.please_enter_ntd)
+                            .setPositiveButton(R.string.ok, null)
                             .show();
         }
         else
@@ -40,9 +39,9 @@ public class MainActivity extends AppCompatActivity {
             int inputCount = Integer.parseInt(count.getText().toString());
             float result = inputCount / rateOfUS;
             new AlertDialog.Builder(this)
-                            .setTitle("Result")
-                            .setMessage("USD is " + result)
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            .setTitle(R.string.result)
+                            .setMessage(getString(R.string.usd_is) + result)
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     count.setText("");
